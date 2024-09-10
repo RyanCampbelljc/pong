@@ -1,0 +1,32 @@
+SinglePlayer
+classes
+-Game 
+members: ball, canvas, lplayer, rPlayer
+functions: DrawElements(),
+Game create paddle and give reference to player? or give coords to player object which then creates a paddle
+player could basically just be a paddle (in visial sense) but contain other functionality like possible creating a connection.
+
+-Paddle
+members: pos,vel,w,h
+function: Draw()
+
+-ball
+members: pos,vel,rad
+function: Draw()
+
+-Player
+members: Paddle
+function: deals with input
+//todo 
+
+
+MULTIPLAYER
+use webRTC or peerJS in order to establish the connections
+will need to write some initial server code in order to originally establish the p2p connections
+
+
+
+***NEXT***
+Player should be given a position then create its own paddle.
+player probably then doesnt need to store its position
+Should there just be subclasses lPlayer and rPlayer in order to deal with w,s or up,down and start positions
