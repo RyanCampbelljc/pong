@@ -26,7 +26,10 @@ will need to write some initial server code in order to originally establish the
 
 
 
-***NEXT***
-Player should be given a position then create its own paddle.
-player probably then doesnt need to store its position
-Should there just be subclasses lPlayer and rPlayer in order to deal with w,s or up,down and start positions
+**NEXT**
+Does gameobject need canvas member?
+
+
+**ideas**
+player factory?
+collision detection class?

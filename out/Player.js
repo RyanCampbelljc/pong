@@ -6,7 +6,6 @@ export class Player {
     constructor(posX, posY, canvas, upButton, downButton) {
         this.m_paddle = new Paddle(posX, posY, canvas);
         document.addEventListener("keydown", (event) => {
-            console.log(event.code);
             if (event.code === upButton)
                 this.m_up = true;
             if (event.code === downButton)
@@ -25,6 +24,9 @@ export class Player {
     }
     draw(ctx) {
         this.m_paddle.draw(ctx);
+    }
+    getPaddle() {
+        return this.m_paddle;
     }
 }
 //# sourceMappingURL=Player.js.map
