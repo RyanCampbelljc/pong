@@ -23,13 +23,3 @@ function: deals with input
 MULTIPLAYER
 use webRTC or peerJS in order to establish the connections
 will need to write some initial server code in order to originally establish the p2p connections
-
-
-
-**NEXT**
-Does gameobject need canvas member?
-
-
-**ideas**
-player factory?
-collision detection class?

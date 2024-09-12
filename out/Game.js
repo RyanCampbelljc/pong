@@ -1,6 +1,7 @@
 import { Ball } from "./module.js";
 import CONSTANTS from "./module.js";
 import { CollisionDetector } from "./module.js";
+import { AUDIO_FILES } from "./module.js";
 export class Game {
     m_canvas;
     m_ctx;
@@ -16,7 +17,9 @@ export class Game {
         this.m_rPlayer = rPlayer;
         this.m_ball = new Ball(this.m_canvas.width / 2, this.m_canvas.height / 2, this.m_canvas);
         this.drawElements();
-        document.getElementById("playButton").addEventListener("click", () => this.play(), { once: true });
+        document.getElementById("playButton").addEventListener("click", () => {
+            this.play();
+        }, { once: true });
     }
     async play() {
         let startTime = window.performance.now() / 1000;
@@ -31,15 +34,24 @@ export class Game {
             this.checkCollisions();
             await this.sleep(1);
         }
+        this.m_isPlaying = false;
+        this.playSound(AUDIO_FILES.WIN_AUDIO);
+        document.getElementById("playButton").addEventListener("click", () => this.restartGame(), { once: true });
+        while (!this.m_isPlaying) {
+            this.printWinner();
+            await this.sleep(1);
+        }
     }
-    resetGame() {
-        document.getElementById("playButton").addEventListener("click", () => this.play(), { once: true });
+    restartGame() {
+        this.m_isPlaying = true;
         this.m_lPlayer.resetScore();
         this.m_rPlayer.resetScore();
-        this.resetItems();
+        this.displayScore(this.m_lPlayer);
+        this.displayScore(this.m_rPlayer);
+        this.resetItemPositions();
         this.play();
     }
-    resetItems() {
+    resetItemPositions() {
         this.m_lPlayer.getPaddle().setPosition(CONSTANTS.LPLAYER_STARTX, CONSTANTS.LPLAYER_STARTY);
         this.m_rPlayer.getPaddle().setPosition(CONSTANTS.RPLAYER_STARTX, CONSTANTS.RPLAYER_STARTY);
         this.m_ball.reset();
@@ -84,9 +96,12 @@ export class Game {
             let theta = (percentage * Math.PI / 2) - Math.PI / 4;
             let ballNegXMagnitude = Math.min(this.m_ball.getVelocityX(), -this.m_ball.getVelocityX());
             this.m_ball.setVelocityY(ballNegXMagnitude * Math.tan(theta));
+            this.playSound(AUDIO_FILES.BOUNCE_AUDIO);
         }
-        if (CollisionDetector.checkCeilingCollision(this.m_ball, this.m_canvas.height))
+        if (CollisionDetector.checkCeilingCollision(this.m_ball, this.m_canvas.height)) {
             this.m_ball.bounceY();
+            this.playSound(AUDIO_FILES.BOUNCE_AUDIO);
+        }
         if (CollisionDetector.checkSideWallCollision(this.m_ball, this.m_canvas.width)) {
             if (this.m_ball.getVelocityX() < 0) {
                 this.m_rPlayer.incrementScore();
@@ -94,7 +109,8 @@ export class Game {
             else {
                 this.m_lPlayer.incrementScore();
             }
-            this.resetItems();
+            this.resetItemPositions();
+            this.playSound(AUDIO_FILES.SCORE_AUDIO);
         }
     }
     displayScore(player) {
@@ -108,6 +124,26 @@ export class Game {
             offset = 50;
         }
         this.m_ctx.fillText(String(player.getScore()), this.m_canvas.width / 2 + offset, this.m_canvas.height / 8);
+    }
+    printWinner() {
+        this.m_ctx.font = "100px Impact";
+        let time = window.performance.now() / 500;
+        let r = (Math.cos(time * Math.PI + Math.PI) + 1) / 2;
+        let g = (Math.cos(time * Math.PI + Math.PI / 2) + 1) / 2;
+        let b = (Math.cos(time * Math.PI + Math.PI * 2) + 1) / 2;
+        this.m_ctx.fillStyle = "rgb(" + r * 255 + "," + g * 255 + "," + b * 255 + ")";
+        this.m_ctx.textAlign = "center";
+        let text = "";
+        if (this.m_lPlayer.getScore() > this.m_rPlayer.getScore())
+            text = "PLAYER 1";
+        else
+            text = "PLAYER 2";
+        this.m_ctx.fillText(text, this.m_canvas.width / 2, this.m_canvas.height / 3);
+        this.m_ctx.fillText("WINS!", this.m_canvas.width / 2, this.m_canvas.height / 2 + 15);
+    }
+    playSound(file) {
+        let audio = new Audio(file);
+        audio.play();
     }
 }
 //# sourceMappingURL=Game.js.map

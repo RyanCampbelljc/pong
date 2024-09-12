@@ -2,6 +2,7 @@ import { Paddle, Player } from "./module.js";
 import { Ball } from "./module.js";
 import CONSTANTS from "./module.js";
 import { CollisionDetector } from "./module.js";
+import { AUDIO_FILES } from "./module.js";
 export class Game{
     private m_canvas: HTMLCanvasElement;
     private m_ctx: CanvasRenderingContext2D;
@@ -10,7 +11,6 @@ export class Game{
     private m_rPlayer: Player;
     private m_ball: Ball;
     private m_dt: number = 0;
-    //todo pass these in as a list of drawables
     constructor(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, lPlayer: Player, rPlayer: Player){
         this.m_canvas = canvas; 
         this.m_ctx = ctx;
@@ -19,13 +19,14 @@ export class Game{
         this.m_ball = new Ball(this.m_canvas.width / 2, this.m_canvas.height / 2, this.m_canvas)
         this.drawElements()
 
-        document.getElementById("playButton")!.addEventListener("click", () => this.play(), {once: true});
+        document.getElementById("playButton")!.addEventListener("click", () => {
+                this.play()
+            }, 
+            {once: true});
     }
 
     private async play(){
         let startTime = window.performance.now() / 1000;
-        //causes velocity to increase still
-        //document.getElementById("playButton")!.addEventListener("click", () => this.resetGame(), {once: true});
         this.m_isPlaying = true;
         while(this.m_lPlayer.getScore() < 3 && this.m_rPlayer.getScore() < 3){
             this.m_dt = window.performance.now() / 1000 - startTime;
@@ -40,19 +41,27 @@ export class Game{
 
             await this.sleep(1);
         }
+        this.m_isPlaying = false;
+        this.playSound(AUDIO_FILES.WIN_AUDIO);
+        document.getElementById("playButton")!.addEventListener("click", () => this.restartGame(), {once: true});
+        while(!this.m_isPlaying){
+            this.printWinner();
+            await this.sleep(1);
+        }
     }
 
-    private resetGame(){
-        //todo reset the score board
-        document.getElementById("playButton")!.addEventListener("click", () => this.play(), {once: true});
+    private restartGame(){
+        this.m_isPlaying = true;
         this.m_lPlayer.resetScore();
         this.m_rPlayer.resetScore();
-        this.resetItems();
+        this.displayScore(this.m_lPlayer);
+        this.displayScore(this.m_rPlayer);
+        this.resetItemPositions();
         this.play();
 
     }
 
-    private resetItems(): void{
+    private resetItemPositions(): void{
         this.m_lPlayer.getPaddle().setPosition(CONSTANTS.LPLAYER_STARTX, CONSTANTS.LPLAYER_STARTY);
         this.m_rPlayer.getPaddle().setPosition(CONSTANTS.RPLAYER_STARTX, CONSTANTS.RPLAYER_STARTY);
         this.m_ball.reset();
@@ -104,11 +113,14 @@ export class Game{
             let theta = (percentage * Math.PI / 2) - Math.PI / 4;
             let ballNegXMagnitude = Math.min(this.m_ball.getVelocityX(), -this.m_ball.getVelocityX())
             this.m_ball.setVelocityY(ballNegXMagnitude * Math.tan(theta));
+            this.playSound(AUDIO_FILES.BOUNCE_AUDIO);
         }
 
-        if(CollisionDetector.checkCeilingCollision(this.m_ball, this.m_canvas.height))
+        if(CollisionDetector.checkCeilingCollision(this.m_ball, this.m_canvas.height)){
             this.m_ball.bounceY();
-        
+            this.playSound(AUDIO_FILES.BOUNCE_AUDIO);
+        }
+            
         if(CollisionDetector.checkSideWallCollision(this.m_ball, this.m_canvas.width)){
             //left wall
             if(this.m_ball.getVelocityX() < 0){
@@ -116,7 +128,8 @@ export class Game{
             }else{//right wall
                 this.m_lPlayer.incrementScore();
             }
-            this.resetItems();
+            this.resetItemPositions();
+            this.playSound(AUDIO_FILES.SCORE_AUDIO);
         }
     }
 
@@ -131,5 +144,28 @@ export class Game{
         }
         this.m_ctx.fillText(String(player.getScore()), this.m_canvas.width / 2 + offset, this.m_canvas.height / 8);
     }
+
+    private printWinner() {
+        this.m_ctx.font = "100px Impact";
+        let time = window.performance.now() / 500;
+        let r = (Math.cos(time * Math.PI + Math.PI) + 1) / 2;
+        let g = (Math.cos(time * Math.PI + Math.PI / 2) + 1) / 2;
+        let b = (Math.cos(time * Math.PI + Math.PI * 2) + 1) / 2;
+        this.m_ctx.fillStyle = "rgb(" + r * 255 + "," + g * 255 + "," + b * 255 + ")";
+        this.m_ctx.textAlign = "center";
+        
+        let text:string = "";
+        if (this.m_lPlayer.getScore() > this.m_rPlayer.getScore()) 
+            text = "PLAYER 1";
+        else 
+            text = "PLAYER 2";
+        this.m_ctx.fillText(text,  this.m_canvas.width / 2,  this.m_canvas.height / 3);
+        this.m_ctx.fillText("WINS!",  this.m_canvas.width / 2,  this.m_canvas.height / 2 + 15);
+      }
+
+      private playSound(file: string){
+        let audio = new Audio(file);
+        audio.play();
+      }
 }
 
