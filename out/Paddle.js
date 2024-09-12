@@ -28,5 +28,15 @@ export class Paddle extends GameObject {
     getPositionY() {
         return this.m_posY;
     }
+    setPosition(x, y) {
+        this.m_posX = x;
+        this.m_posY = y;
+    }
+    getWidth() {
+        return Paddle.S_WIDTH;
+    }
+    getHeight() {
+        return Paddle.S_HEIGHT;
+    }
 }
 //# sourceMappingURL=Paddle.js.map

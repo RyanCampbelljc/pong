@@ -1,5 +1,6 @@
 import { Game } from "./module.js";
 import { Player } from "./module.js";
+import CONSTANTS from "./module.js";
 window.addEventListener("DOMContentLoaded", setup);
 
 //todo should get reference to context and create players to pass to game.
@@ -8,8 +9,8 @@ function setup() {
     let canvas = document.getElementById("myCanvas")! as HTMLCanvasElement;
     let ctx = canvas.getContext("2d")! as CanvasRenderingContext2D;
     //todo somehow encapsulate these controls schemes and start positions
-    let lPlayer = new Player(20, 225, canvas, "KeyW", "KeyS");
-    let rPlayer2 = new Player(770, 225, canvas, "ArrowUp", "ArrowDown");
+    let lPlayer = new Player(CONSTANTS.LPLAYER_STARTX, CONSTANTS.LPLAYER_STARTY, canvas, "KeyW", "KeyS");
+    let rPlayer2 = new Player(CONSTANTS.RPLAYER_STARTX, CONSTANTS.LPLAYER_STARTY, canvas, "ArrowUp", "ArrowDown");
     let g = new Game(canvas, ctx, lPlayer, rPlayer2);
-    g.play();
 }
+

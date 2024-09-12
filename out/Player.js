@@ -3,6 +3,7 @@ export class Player {
     m_paddle;
     m_up = false;
     m_down = false;
+    m_score = 0;
     constructor(posX, posY, canvas, upButton, downButton) {
         this.m_paddle = new Paddle(posX, posY, canvas);
         document.addEventListener("keydown", (event) => {
@@ -27,6 +28,15 @@ export class Player {
     }
     getPaddle() {
         return this.m_paddle;
+    }
+    getScore() {
+        return this.m_score;
+    }
+    incrementScore() {
+        ++this.m_score;
+    }
+    resetScore() {
+        this.m_score = 0;
     }
 }
 //# sourceMappingURL=Player.js.map
