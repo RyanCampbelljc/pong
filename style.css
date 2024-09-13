@@ -1,6 +1,7 @@
 *, ::before, ::after 
 {
 	box-sizing: border-box;
+    font-family: 'Courier New', Courier, monospace;
 }
 body{
     background-color: rgb(103, 166, 187);
@@ -10,5 +11,13 @@ body{
 #myCanvas{
     background-color: rgb(0, 0, 0);
     border: 3px solid #c3c3c3;
+    margin: 10px;
 }
 
+#content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+/* find a button here */
+/* https://getcssscan.com/css-buttons-examples */

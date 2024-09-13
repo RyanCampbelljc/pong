@@ -1,25 +1,11 @@
-SinglePlayer
-classes
--Game 
-members: ball, canvas, lplayer, rPlayer
-functions: DrawElements(),
-Game create paddle and give reference to player? or give coords to player object which then creates a paddle
-player could basically just be a paddle (in visial sense) but contain other functionality like possible creating a connection.
-
--Paddle
-members: pos,vel,w,h
-function: Draw()
-
--ball
-members: pos,vel,rad
-function: Draw()
-
--Player
-members: Paddle
-function: deals with input
-//todo 
-
-
 MULTIPLAYER
 use webRTC or peerJS in order to establish the connections
 will need to write some initial server code in order to originally establish the p2p connections
+
+
+todo
+make font family used in html the same as the one used in the canvas rendering
+
+probably do not need a singleplayer and multiplayer.html
+can have another param for Game constructor that states the gametype (enum)
+with that information can change the page title and whatever else.

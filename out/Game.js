@@ -55,6 +55,7 @@ export class Game {
         this.m_lPlayer.getPaddle().setPosition(CONSTANTS.LPLAYER_STARTX, CONSTANTS.LPLAYER_STARTY);
         this.m_rPlayer.getPaddle().setPosition(CONSTANTS.RPLAYER_STARTX, CONSTANTS.RPLAYER_STARTY);
         this.m_ball.reset();
+        this.m_ball.setRandomDirection();
         this.drawElements();
     }
     sleep(ms) {
@@ -81,16 +82,17 @@ export class Game {
     }
     checkCollisions() {
         let pad;
-        if (CollisionDetector.checkPaddleCollision(this.m_ball, this.m_lPlayer.getPaddle())) {
+        if (CollisionDetector.checkPaddleCollision(this.m_ball, this.m_lPlayer.getPaddle()) && this.m_ball.getVelocityX() < 0) {
             pad = this.m_lPlayer.getPaddle();
         }
-        else if (CollisionDetector.checkPaddleCollision(this.m_ball, this.m_rPlayer.getPaddle())) {
+        else if (CollisionDetector.checkPaddleCollision(this.m_ball, this.m_rPlayer.getPaddle()) && this.m_ball.getVelocityX() > 0) {
             pad = this.m_rPlayer.getPaddle();
         }
         if (pad) {
             this.m_ball.bounceX();
-            let max = 64;
-            let padRange = pad.getPositionY() + pad.getHeight() + 7;
+            let rad = this.m_ball.getRadius();
+            let max = pad.getHeight() + 2 * rad;
+            let padRange = pad.getPositionY() + pad.getHeight() + rad;
             let diff = padRange - this.m_ball.getPositionY();
             let percentage = (diff) / max;
             let theta = (percentage * Math.PI / 2) - Math.PI / 4;

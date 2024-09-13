@@ -5,6 +5,7 @@ export class Ball extends GameObject {
     m_radius = 7;
     m_velocityX = Ball.S_START_VEL;
     m_velocityY = 0;
+    m_bounceCount = 0;
     constructor(x, y, canvas) {
         super(x, y, canvas);
     }
@@ -23,6 +24,7 @@ export class Ball extends GameObject {
         this.m_velocityY = 0;
         this.m_posX = this.m_canvas.width / 2;
         this.m_posY = this.m_canvas.height / 2;
+        this.m_bounceCount = 0;
     }
     getPositionX() {
         return this.m_posX;
@@ -35,6 +37,10 @@ export class Ball extends GameObject {
     }
     bounceX() {
         this.m_velocityX *= -1;
+        ++this.m_bounceCount;
+        if (this.m_bounceCount % 5 == 0) {
+            this.m_velocityX > 0 ? this.m_velocityX += 100 : this.m_velocityX -= 100;
+        }
     }
     bounceY() {
         this.m_velocityY *= -1;
@@ -44,6 +50,10 @@ export class Ball extends GameObject {
     }
     getVelocityX() {
         return this.m_velocityX;
+    }
+    setRandomDirection() {
+        if (Math.random() > 0.5)
+            this.m_velocityX *= -1;
     }
 }
 //# sourceMappingURL=Ball.js.map

@@ -65,6 +65,7 @@ export class Game{
         this.m_lPlayer.getPaddle().setPosition(CONSTANTS.LPLAYER_STARTX, CONSTANTS.LPLAYER_STARTY);
         this.m_rPlayer.getPaddle().setPosition(CONSTANTS.RPLAYER_STARTX, CONSTANTS.RPLAYER_STARTY);
         this.m_ball.reset();
+        this.m_ball.setRandomDirection();
         this.drawElements();
     }
 
@@ -95,16 +96,20 @@ export class Game{
 
     private checkCollisions(): void{
         let pad: Paddle | undefined;
-        if(CollisionDetector.checkPaddleCollision(this.m_ball, this.m_lPlayer.getPaddle())){
+        //checking the velocity as well ensures that th ball doesnt spaz when it hits a paddle.
+        //consider the ball hitting the paddle part way through such that even when it switches direction its still in contact with pad next frame
+        if(CollisionDetector.checkPaddleCollision(this.m_ball, this.m_lPlayer.getPaddle()) && this.m_ball.getVelocityX() < 0){
             pad = this.m_lPlayer.getPaddle();
-        }else if(CollisionDetector.checkPaddleCollision(this.m_ball, this.m_rPlayer.getPaddle())){
+        }else if(CollisionDetector.checkPaddleCollision(this.m_ball, this.m_rPlayer.getPaddle()) && this.m_ball.getVelocityX() > 0){
             pad = this.m_rPlayer.getPaddle();
         }
         
         if(pad){
             this.m_ball.bounceX();
-            let max = 64 // todo padH + 2rad // there is 64 pixel height where collision can occure
-            let padRange = pad.getPositionY() + pad.getHeight() + 7; // 7 = ball.rad
+            let rad = this.m_ball.getRadius();
+            //the height of possible area where collision can occur
+            let max = pad.getHeight() + 2 * rad  // there is 64 pixel height where collision can occure
+            let padRange = pad.getPositionY() + pad.getHeight() + rad; 
             let diff = padRange - this.m_ball.getPositionY();// distance from bottom of pad detect range and balls posY
             //the percentage of the way from the top
             let percentage = (diff) / max;
