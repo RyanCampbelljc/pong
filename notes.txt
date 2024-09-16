@@ -6,6 +6,28 @@ will need to write some initial server code in order to originally establish the
 todo
 make font family used in html the same as the one used in the canvas rendering
 
-probably do not need a singleplayer and multiplayer.html
-can have another param for Game constructor that states the gametype (enum)
-with that information can change the page title and whatever else.
+
+//https://www.youtube.com/watch?v=ypqs_u9GbpQ
+
+
+good tutorial
+https://socket.io/docs/v4/tutorial/step-4
+
+to watch
+https://www.youtube.com/watch?v=PXBy6pB4mTU
+
+
+api server
+https://socket.io/docs/v4/server-api/
+api client
+https://socket.io/docs/v4/client-api/
+
+server notes
+socketio has 2 parts
+1) A server that integrates with (or mounts on) the Node.JS HTTP Server (the socket.io package)
+2) A client library that loads on the browser side (the socket.io-client package)
+
+io.emit() emmits event to all connected sockets
+
+steps to try
+1) create a room and have 2 ppl join it.
