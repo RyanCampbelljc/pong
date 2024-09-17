@@ -31,3 +31,12 @@ io.emit() emmits event to all connected sockets
 
 steps to try
 1) create a room and have 2 ppl join it.
+
+
+current issue
+when someone creates a game. need to call a function that makes the multiplayer page come up
+while also giving a gamecode that can be displayed in the html.
+but the mp page has other js associated with it.
+
+
+write js for index,singleplayer,and multiplayer right in html file?

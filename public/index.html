@@ -4,8 +4,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Pong</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" type="text/css" href="style.css" />
-    <script type="module" src="src/script.js"></script>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script type="module" src="js/script.js"></script>
   </head>
   <body>
     <h1>PONG</h1>
@@ -17,9 +19,7 @@
       </a>
 
       <p>Multiplayer:</p>
-      <a href="multiPlayer.html">
-        <button type="button">Create Lobby</button>
-      </a>
+      <button type="button" id="createLobby">Create Lobby</button>
 
       <form id="form" action="">
         <input id="lobbyInput" autocomplete="off" /><button>Join Lobby</button>
