@@ -53,5 +53,8 @@ export class Player{
 
     public setPosY(posY: number){
         this.m_paddle.setPositionY(posY);
+        if(this.m_socket){
+            this.m_socket.emit("playerMoved", this.m_paddle.getPositionY());
+        }
     }
 }

@@ -25,7 +25,6 @@ export class Player {
         if (this.m_up != this.m_down) {
             this.m_paddle.movePaddle(dt, this.m_up == true ? 1 : -1);
             if (this.m_socket) {
-                console.log("ran");
                 this.m_socket.emit("playerMoved", this.m_paddle.getPositionY());
             }
         }

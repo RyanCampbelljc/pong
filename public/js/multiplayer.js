@@ -4,6 +4,7 @@ import CONSTANTS from "/out/module.js";
 window.addEventListener("DOMContentLoaded", setup);
 let lPlayer;
 let rPlayer;
+let game;
 const socket = io();
 
 socket.on("connect", () => {
@@ -16,6 +17,7 @@ socket.on("connect", () => {
 	}
 	socket.on("startGame", () => {
 		startGame();
+		game.play();
 	});
 	//todo make this typed.
 	socket.on("updateRightPlayer", (posY) => {
@@ -55,5 +57,5 @@ function startGame() {
 		"ArrowDown",
 		socket
 	);
-	let g = new Game(canvas, ctx, lPlayer, rPlayer);
+	game = new Game(canvas, ctx, lPlayer, rPlayer);
 }

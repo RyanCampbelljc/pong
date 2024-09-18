@@ -17,7 +17,7 @@ export class Game {
         this.m_rPlayer = rPlayer;
         this.m_ball = new Ball(this.m_canvas.width / 2, this.m_canvas.height / 2, this.m_canvas);
         this.drawElements();
-        document.getElementById("playButton").addEventListener("click", () => {
+        document.getElementById("playButton")?.addEventListener("click", () => {
             this.play();
         }, { once: true });
     }

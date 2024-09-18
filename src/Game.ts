@@ -19,13 +19,13 @@ export class Game{
         this.m_ball = new Ball(this.m_canvas.width / 2, this.m_canvas.height / 2, this.m_canvas)
         this.drawElements()
 
-        document.getElementById("playButton")!.addEventListener("click", () => {
+        document.getElementById("playButton")?.addEventListener("click", () => {
                 this.play()
             }, 
             {once: true});
     }
 
-    private async play(){
+    public async play(){
         let startTime = window.performance.now() / 1000;
         this.m_isPlaying = true;
         while(this.m_lPlayer.getScore() < 3 && this.m_rPlayer.getScore() < 3){
