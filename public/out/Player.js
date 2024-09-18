@@ -4,8 +4,10 @@ export class Player {
     m_up = false;
     m_down = false;
     m_score = 0;
-    constructor(posX, posY, canvas, upButton, downButton) {
+    m_socket;
+    constructor(posX, posY, canvas, upButton, downButton, socket = null) {
         this.m_paddle = new Paddle(posX, posY, canvas);
+        this.m_socket = socket;
         document.addEventListener("keydown", (event) => {
             if (event.code === upButton)
                 this.m_up = true;
@@ -20,8 +22,13 @@ export class Player {
         });
     }
     update(dt) {
-        if (this.m_up != this.m_down)
+        if (this.m_up != this.m_down) {
             this.m_paddle.movePaddle(dt, this.m_up == true ? 1 : -1);
+            if (this.m_socket) {
+                console.log("ran");
+                this.m_socket.emit("playerMoved", this.m_paddle.getPositionY());
+            }
+        }
     }
     draw(ctx) {
         this.m_paddle.draw(ctx);
@@ -37,6 +44,9 @@ export class Player {
     }
     resetScore() {
         this.m_score = 0;
+    }
+    setPosY(posY) {
+        this.m_paddle.setPositionY(posY);
     }
 }
 //# sourceMappingURL=Player.js.map

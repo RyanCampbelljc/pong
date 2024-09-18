@@ -1,8 +1,28 @@
-import { Game } from "/public/out/module.js";
-import { Player } from "/public/out/module.js";
-import CONSTANTS from "/public/out/module.js";
-let socket;
+import { Game } from "/out/module.js";
+import { Player } from "/out/module.js";
+import CONSTANTS from "/out/module.js";
 window.addEventListener("DOMContentLoaded", setup);
+let lPlayer;
+let rPlayer;
+const socket = io();
+
+socket.on("connect", () => {
+	let code = localStorage.getItem("gameCode");
+	if (code) {
+		socket.emit("joinRoom", code);
+	} else {
+		console.error("ERROR: No game code in local storage found");
+		//todo should I redirect to home page here?
+	}
+	socket.on("startGame", () => {
+		startGame();
+	});
+	//todo make this typed.
+	socket.on("updateRightPlayer", (posY) => {
+		console.log("updated");
+		rPlayer.setPosY(posY);
+	});
+});
 
 //todo should get reference to context and create players to pass to game.
 //this way the game class does need to change when multiplayer becomes a thing
@@ -14,30 +34,26 @@ function setup() {
 	} else {
 		console.error("No gameCode found in localStorage");
 	}
-	socket = io();
-	socket.on("playerJoin", () => {
-		startGame();
-	});
 }
 
 function startGame() {
 	let canvas = document.getElementById("myCanvas");
 	let ctx = canvas.getContext("2d");
-	let lPlayer = new Player(
+	lPlayer = new Player(
 		CONSTANTS.LPLAYER_STARTX,
 		CONSTANTS.LPLAYER_STARTY,
 		canvas,
 		"KeyW",
-		"KeyS"
+		"KeyS",
+		socket
 	);
-	let rPlayer2 = new Player(
+	rPlayer = new Player(
 		CONSTANTS.RPLAYER_STARTX,
 		CONSTANTS.LPLAYER_STARTY,
 		canvas,
 		"ArrowUp",
-		"ArrowDown"
+		"ArrowDown",
+		socket
 	);
-	let g = new Game(canvas, ctx, lPlayer, rPlayer2);
+	let g = new Game(canvas, ctx, lPlayer, rPlayer);
 }
-
-//  //todo somehow encapsulate these controls schemes and start positions

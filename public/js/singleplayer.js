@@ -1,6 +1,6 @@
-import { Game } from "/public/out/module.js";
-import { Player } from "/public/out/module.js";
-import CONSTANTS from "/public/out/module.js";
+import { Game } from "/out/module.js";
+import { Player } from "/out/module.js";
+import CONSTANTS from "/out/module.js";
 window.addEventListener("DOMContentLoaded", setup);
 function setup() {
 	let canvas = document.getElementById("myCanvas");

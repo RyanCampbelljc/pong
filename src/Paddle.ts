@@ -36,10 +36,15 @@ export class Paddle extends GameObject{
         return this.m_posY;
     }
 
-    public setPosition(x:number, y:number){
+    public setPosition(x: number, y: number){
         this.m_posX = x;
         this.m_posY = y;
     }
+    
+    public setPositionY(y: number){
+        this.m_posY = y;
+    }
+
 
     public getWidth(): number{
         return Paddle.S_WIDTH;
