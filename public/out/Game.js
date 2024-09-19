@@ -10,12 +10,14 @@ export class Game {
     m_rPlayer;
     m_ball;
     m_dt = 0;
-    constructor(canvas, ctx, lPlayer, rPlayer) {
+    m_socket;
+    constructor(canvas, ctx, lPlayer, rPlayer, socket = null) {
         this.m_canvas = canvas;
         this.m_ctx = ctx;
         this.m_lPlayer = lPlayer;
         this.m_rPlayer = rPlayer;
         this.m_ball = new Ball(this.m_canvas.width / 2, this.m_canvas.height / 2, this.m_canvas);
+        this.m_socket = socket;
         this.drawElements();
         document.getElementById("playButton")?.addEventListener("click", () => {
             this.play();
@@ -36,7 +38,7 @@ export class Game {
         }
         this.m_isPlaying = false;
         this.playSound(AUDIO_FILES.WIN_AUDIO);
-        document.getElementById("playButton").addEventListener("click", () => this.restartGame(), { once: true });
+        document.getElementById("playButton")?.addEventListener("click", () => this.restartGame(), { once: true });
         while (!this.m_isPlaying) {
             this.printWinner();
             await this.sleep(1);
@@ -57,6 +59,9 @@ export class Game {
         this.m_ball.reset();
         this.m_ball.setRandomDirection();
         this.drawElements();
+        if (this.m_socket) {
+            this.m_socket.emit("resetItems");
+        }
     }
     sleep(ms) {
         return new Promise((resolve) => setTimeout(resolve, ms));

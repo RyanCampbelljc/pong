@@ -21,8 +21,11 @@ socket.on("connect", () => {
 	});
 	//todo make this typed.
 	socket.on("updateRightPlayer", (posY) => {
-		console.log("updated");
+		console.log("updated player position");
 		rPlayer.setPosY(posY);
+	});
+	socket.on("resetItems", () => {
+		game.resetItemPositions();
 	});
 });
 

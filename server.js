@@ -62,13 +62,18 @@ io.on("connection", (socket) => {
 				}`
 			);
 			if (roomSize + 1 == 2) {
+				// game is ready to start
 				io.to(roomCode).emit("startGame"); // to all sockets in the room
 			}
 		}
 	});
 
+	//will be undefined when a player creates a lobby
+	//will be defined when someone joins a lobby with a code
 	socket.on("loadMP", (roomCode) => {
-		if (roomCode === undefined) roomCode = randomCode();
+		if (roomCode === undefined) {
+			roomCode = randomCode();
+		}
 		loadMulitplayer(socket, roomCode);
 	});
 
@@ -76,17 +81,16 @@ io.on("connection", (socket) => {
 		console.log("disconnected");
 	});
 
-	//todo make code les breakable(socket could be in more rooms)
 	socket.on("playerMoved", (posY) => {
-		//convert rooms set into an array but filter out the room that is equal to the
-		// sockets id(this one is joined automatically)
-		//only should be one room left which should be in rooms[0]
-		let rooms = Array.from(socket.rooms).filter(
-			(room) => room !== socket.id
-		);
-		let room = rooms[0];
+		let room = getSocketRoom(socket);
 		//emits to all other sockets in the room(not the sender)
 		socket.to(room).emit("updateRightPlayer", posY);
+	});
+
+	socket.on("resetItems", () => {
+		let room = getSocketRoom(room);
+		console.log("emitted");
+		socket.to(room).emit("resetItems");
 	});
 });
 
@@ -117,4 +121,13 @@ function loadMulitplayer(socket, code) {
 
 function randomCode() {
 	return Math.floor(Math.random() * 10000);
+}
+
+//todo make code less breakable(socket could be in more rooms)
+function getSocketRoom(socket) {
+	//convert rooms set into an array but filter out the room that is equal to the
+	// sockets id(this one is joined automatically)
+	//only should be one room left which should be in rooms[0]
+	let rooms = Array.from(socket.rooms).filter((room) => room !== socket.id);
+	return rooms[0];
 }

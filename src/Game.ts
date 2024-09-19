@@ -11,12 +11,14 @@ export class Game{
     private m_rPlayer: Player;
     private m_ball: Ball;
     private m_dt: number = 0;
-    constructor(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, lPlayer: Player, rPlayer: Player){
+    private m_socket : any;
+    constructor(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, lPlayer: Player, rPlayer: Player, socket : any = null){
         this.m_canvas = canvas; 
         this.m_ctx = ctx;
         this.m_lPlayer = lPlayer;
         this.m_rPlayer = rPlayer;
         this.m_ball = new Ball(this.m_canvas.width / 2, this.m_canvas.height / 2, this.m_canvas)
+        this.m_socket = socket;
         this.drawElements()
 
         document.getElementById("playButton")?.addEventListener("click", () => {
@@ -25,6 +27,8 @@ export class Game{
             {once: true});
     }
 
+    //called in single player when the play button is pressed
+    //called in mp when the second player joins
     public async play(){
         let startTime = window.performance.now() / 1000;
         this.m_isPlaying = true;
@@ -43,7 +47,7 @@ export class Game{
         }
         this.m_isPlaying = false;
         this.playSound(AUDIO_FILES.WIN_AUDIO);
-        document.getElementById("playButton")!.addEventListener("click", () => this.restartGame(), {once: true});
+        document.getElementById("playButton")?.addEventListener("click", () => this.restartGame(), {once: true});
         while(!this.m_isPlaying){
             this.printWinner();
             await this.sleep(1);
@@ -61,12 +65,16 @@ export class Game{
 
     }
 
+    //todo make ball direction go towards player that last scored
     private resetItemPositions(): void{
         this.m_lPlayer.getPaddle().setPosition(CONSTANTS.LPLAYER_STARTX, CONSTANTS.LPLAYER_STARTY);
         this.m_rPlayer.getPaddle().setPosition(CONSTANTS.RPLAYER_STARTX, CONSTANTS.RPLAYER_STARTY);
         this.m_ball.reset();
-        this.m_ball.setRandomDirection();
+        // this.m_ball.setRandomDirection();
         this.drawElements();
+        if(this.m_socket){
+            this.m_socket.emit("resetItems");
+        }
     }
 
     private sleep(ms: number) {
@@ -125,7 +133,8 @@ export class Game{
             this.m_ball.bounceY();
             this.playSound(AUDIO_FILES.BOUNCE_AUDIO);
         }
-            
+
+        //player scored
         if(CollisionDetector.checkSideWallCollision(this.m_ball, this.m_canvas.width)){
             //left wall
             if(this.m_ball.getVelocityX() < 0){
