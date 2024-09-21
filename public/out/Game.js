@@ -11,6 +11,7 @@ export class Game {
     m_ball;
     m_dt = 0;
     m_socket;
+    m_playButton;
     constructor(canvas, ctx, lPlayer, rPlayer, socket = null) {
         this.m_canvas = canvas;
         this.m_ctx = ctx;
@@ -19,11 +20,18 @@ export class Game {
         this.m_ball = new Ball(this.m_canvas.width / 2, this.m_canvas.height / 2, this.m_canvas);
         this.m_socket = socket;
         this.drawElements();
-        document.getElementById("playButton")?.addEventListener("click", () => {
-            this.play();
-        }, { once: true });
+        this.m_playButton = document.getElementById("playButton");
+        if (this.m_socket == null) {
+            this.m_playButton.addEventListener("click", () => {
+                this.play();
+            }, { once: true });
+        }
+        else {
+            this.m_playButton.setAttribute("listener-exists", "false");
+        }
     }
     async play() {
+        this.m_playButton.disabled = true;
         let startTime = window.performance.now() / 1000;
         this.m_isPlaying = true;
         while (this.m_lPlayer.getScore() < 3 && this.m_rPlayer.getScore() < 3) {
@@ -36,9 +44,23 @@ export class Game {
             this.checkCollisions();
             await this.sleep(1);
         }
+        this.m_playButton.disabled = false;
         this.m_isPlaying = false;
         this.playSound(AUDIO_FILES.WIN_AUDIO);
-        document.getElementById("playButton")?.addEventListener("click", () => this.restartGame(), { once: true });
+        if (this.m_socket) {
+            this.m_playButton.disabled = false;
+            if (this.m_playButton.getAttribute("listener-exists") == "false") {
+                this.m_playButton.addEventListener("click", () => {
+                    this.m_socket.emit("restartGame");
+                    this.restartGame();
+                    this.m_playButton.setAttribute("listener-exists", "false");
+                }, { once: true });
+            }
+            this.m_playButton.setAttribute("listener-exists", "true");
+        }
+        else {
+            this.m_playButton.addEventListener("click", () => this.restartGame(), { once: true });
+        }
         while (!this.m_isPlaying) {
             this.printWinner();
             await this.sleep(1);
@@ -101,7 +123,9 @@ export class Game {
             let ballNegXMagnitude = Math.min(vX, -this.m_ball.getVelocityX());
             this.m_ball.setVelocity(vX, ballNegXMagnitude * Math.tan(theta));
             this.playSound(AUDIO_FILES.BOUNCE_AUDIO);
-            this.m_socket.emit("updateBallPosition", this.m_ball.getPositionX(), this.m_ball.getPositionY(), vX, this.m_ball.getVelocityY());
+            if (this.m_socket) {
+                this.m_socket.emit("updateBallPosition", this.m_ball.getPositionX(), this.m_ball.getPositionY(), vX, this.m_ball.getVelocityY());
+            }
         }
         if (CollisionDetector.checkCeilingCollision(this.m_ball, this.m_canvas.height)) {
             this.m_ball.bounceY();

@@ -91,7 +91,6 @@ io.on("connection", (socket) => {
 		let room = getSocketRoom(socket);
 		//emits to all other sockets in the room(not the sender)
 		if (side === "right") {
-			console.log("update rightPlayer");
 			socket.to(room).emit("updateRightPlayer", posY);
 		} else if (side === "left") {
 			socket.to(room).emit("updateLeftPlayer", posY);
@@ -110,6 +109,11 @@ io.on("connection", (socket) => {
 	socket.on("updateBallPosition", (posX, posY, vX, vY) => {
 		let room = getSocketRoom(socket);
 		socket.to(room).emit("updateBallPosition", posX, posY, vX, vY);
+	});
+
+	socket.on("restartGame", () => {
+		let room = getSocketRoom(socket);
+		socket.to(room).emit("restartGame");
 	});
 });
 

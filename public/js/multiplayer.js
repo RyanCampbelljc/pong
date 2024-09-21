@@ -33,6 +33,10 @@ socket.on("connect", () => {
 	socket.on("updateBallPosition", (posX, posY, vX, vY) => {
 		game.updateBall(posX, posY, vX, vY);
 	});
+	socket.on("restartGame", () => {
+		console.log("restarting the game");
+		game.restartGame();
+	});
 });
 
 //todo should get reference to context and create players to pass to game.

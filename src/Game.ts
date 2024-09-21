@@ -12,6 +12,7 @@ export class Game{
     private m_ball: Ball;
     private m_dt: number = 0;
     private m_socket : any;
+    private m_playButton : HTMLButtonElement;
     constructor(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, lPlayer: Player, rPlayer: Player, socket : any = null){
         this.m_canvas = canvas; 
         this.m_ctx = ctx;
@@ -21,15 +22,29 @@ export class Game{
         this.m_socket = socket;
         this.drawElements()
 
-        document.getElementById("playButton")?.addEventListener("click", () => {
+        //only want this if singleplayer.
+        this.m_playButton = document.getElementById("playButton") as HTMLButtonElement;
+        if(this.m_socket == null){
+            this.m_playButton!.addEventListener("click", () => {
                 this.play()
             }, 
             {once: true});
+        }else{// multiplayer
+            //make sure only one event listener can be added to the button.
+            //since either player can click play button once the game finishes
+            //its possible for the code to add the event listener for the button
+            //on the other client more than once.
+            //kind of a hacky workaround 
+            this.m_playButton.setAttribute("listener-exists","false");
+        }
+        
+        
     }
 
     //called in single player when the play button is pressed
     //called in mp when the second player joins
     public async play(){
+        this.m_playButton.disabled = true;
         let startTime = window.performance.now() / 1000;
         this.m_isPlaying = true;
         while(this.m_lPlayer.getScore() < 3 && this.m_rPlayer.getScore() < 3){
@@ -45,9 +60,25 @@ export class Game{
 
             await this.sleep(1);
         }
+        this.m_playButton.disabled = false;
         this.m_isPlaying = false;
         this.playSound(AUDIO_FILES.WIN_AUDIO);
-        document.getElementById("playButton")?.addEventListener("click", () => this.restartGame(), {once: true});
+        if(this.m_socket){
+            this.m_playButton.disabled = false;
+            if(this.m_playButton.getAttribute("listener-exists") == "false"){
+                this.m_playButton.addEventListener("click", () => {
+                    this.m_socket.emit("restartGame");
+                    this.restartGame()
+                    this.m_playButton.setAttribute("listener-exists","false");
+                },
+                {once: true});
+            }
+            this.m_playButton.setAttribute("listener-exists","true");
+        
+        }else{
+            this.m_playButton.addEventListener("click", () => this.restartGame(), {once: true});
+        }
+        
         while(!this.m_isPlaying){
             this.printWinner();
             await this.sleep(1);
@@ -72,9 +103,6 @@ export class Game{
         this.m_ball.reset();
         // this.m_ball.setRandomDirection();
         this.drawElements();
-        // if(this.m_socket){
-        //     this.m_socket.emit("resetItems");
-        // }
     }
 
     private sleep(ms: number) {
@@ -129,7 +157,10 @@ export class Game{
             this.m_ball.setVelocity(vX, ballNegXMagnitude * Math.tan(theta));
             this.playSound(AUDIO_FILES.BOUNCE_AUDIO);
 
-            this.m_socket.emit("updateBallPosition", this.m_ball.getPositionX(), this.m_ball.getPositionY(), vX, this.m_ball.getVelocityY())
+            //will be null when singleplayer
+            if(this.m_socket){
+                this.m_socket.emit("updateBallPosition", this.m_ball.getPositionX(), this.m_ball.getPositionY(), vX, this.m_ball.getVelocityY())
+            }
         }
 
         if(CollisionDetector.checkCeilingCollision(this.m_ball, this.m_canvas.height)){
