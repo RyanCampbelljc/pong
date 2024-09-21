@@ -124,9 +124,12 @@ export class Game{
             //use this percentage to get that percent between -pi/4 and pi/4 (45deg)
             //first part is to use the same range but make it positive then subtract off again.(to deal with the negatives)
             let theta = (percentage * Math.PI / 2) - Math.PI / 4;
-            let ballNegXMagnitude = Math.min(this.m_ball.getVelocityX(), -this.m_ball.getVelocityX())
-            this.m_ball.setVelocityY(ballNegXMagnitude * Math.tan(theta));
+            let vX  = this.m_ball.getVelocityX()
+            let ballNegXMagnitude = Math.min(vX, -this.m_ball.getVelocityX())
+            this.m_ball.setVelocity(vX, ballNegXMagnitude * Math.tan(theta));
             this.playSound(AUDIO_FILES.BOUNCE_AUDIO);
+
+            this.m_socket.emit("updateBallPosition", this.m_ball.getPositionX(), this.m_ball.getPositionY(), vX, this.m_ball.getVelocityY())
         }
 
         if(CollisionDetector.checkCeilingCollision(this.m_ball, this.m_canvas.height)){
@@ -180,6 +183,11 @@ export class Game{
       private playSound(file: string){
         let audio = new Audio(file);
         audio.play();
+      }
+
+      public updateBall(posX: number, posY: number, vX: number, vY: number){
+        this.m_ball.setPosition(posX, posY);
+        this.m_ball.setVelocity(vX, vY);
       }
 }
 

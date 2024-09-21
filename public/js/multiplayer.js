@@ -30,6 +30,9 @@ socket.on("connect", () => {
 	socket.on("resetItems", () => {
 		game.resetItemPositions();
 	});
+	socket.on("updateBallPosition", (posX, posY, vX, vY) => {
+		game.updateBall(posX, posY, vX, vY);
+	});
 });
 
 //todo should get reference to context and create players to pass to game.

@@ -102,8 +102,14 @@ io.on("connection", (socket) => {
 
 	socket.on("resetItems", () => {
 		let room = getSocketRoom(socket);
-		console.log("emitted");
 		socket.to(room).emit("resetItems");
+	});
+
+	//called when a ball hits a paddle. Updates the OTHER clients game
+	//so that the ball will be in the same spot and moving at the same speed.
+	socket.on("updateBallPosition", (posX, posY, vX, vY) => {
+		let room = getSocketRoom(socket);
+		socket.to(room).emit("updateBallPosition", posX, posY, vX, vY);
 	});
 });
 

@@ -39,6 +39,11 @@ export class Ball extends GameObject{
         return this.m_posY;
     }
 
+    public setPosition(x: number, y:number){
+        this.m_posX = x;
+        this.m_posY = y;
+    }
+
     public getRadius(){
         return this.m_radius;
     }
@@ -53,12 +58,17 @@ export class Ball extends GameObject{
     public bounceY(){
         this.m_velocityY *= -1;
     }
-    public setVelocityY(vel: number){
-        this.m_velocityY = vel;
+    public setVelocity(x: number, y: number){
+        this.m_velocityX = x;
+        this.m_velocityY = y;
     }
     public getVelocityX(): number{
         return this.m_velocityX;
     }
+    public getVelocityY(): number{
+        return this.m_velocityY;
+    }
+
 
     public setRandomDirection(){
         if(Math.random() > 0.5)

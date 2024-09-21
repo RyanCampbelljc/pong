@@ -32,6 +32,10 @@ export class Ball extends GameObject {
     getPositionY() {
         return this.m_posY;
     }
+    setPosition(x, y) {
+        this.m_posX = x;
+        this.m_posY = y;
+    }
     getRadius() {
         return this.m_radius;
     }
@@ -45,11 +49,15 @@ export class Ball extends GameObject {
     bounceY() {
         this.m_velocityY *= -1;
     }
-    setVelocityY(vel) {
-        this.m_velocityY = vel;
+    setVelocity(x, y) {
+        this.m_velocityX = x;
+        this.m_velocityY = y;
     }
     getVelocityX() {
         return this.m_velocityX;
+    }
+    getVelocityY() {
+        return this.m_velocityY;
     }
     setRandomDirection() {
         if (Math.random() > 0.5)
