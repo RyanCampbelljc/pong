@@ -18,10 +18,12 @@ export class NetworkInformation {
     isMultiplayer;
     socketID;
     sessionID;
-    constructor(isMultiplayer, socket, session) {
+    side;
+    constructor(isMultiplayer, socket, session, side) {
         this.isMultiplayer = isMultiplayer;
         this.socketID = socket;
         this.sessionID = session;
+        this.side = side;
     }
 }
 //# sourceMappingURL=module.js.map

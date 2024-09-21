@@ -8,8 +8,8 @@ import path from "path";
 const app = express();
 const server = createServer(app);
 const io = new Server(server);
-let rightSessionID;
-let leftSessionID;
+// let rightSessionID;
+// let leftSessionID;
 const sessionMiddleware = session({
 	secret: "mySecretKey",
 	resave: false,
@@ -64,13 +64,13 @@ io.on("connection", (socket) => {
 			if (roomSize + 1 == 2) {
 				// game is ready to start
 				socket.to(roomCode).emit("startGame", "right"); //emit to the other player that they are right
-				leftSessionID = socket.request.session.id;
-				console.log("leftSessionID: " + leftSessionID);
+				// leftSessionID = socket.request.session.id;
+				// console.log("leftSessionID: " + leftSessionID);
 				socket.emit("startGame", "left"); //emit to self left
-			} else {
-				rightSessionID = socket.request.session.id;
-				console.log("rightSessionID: " + rightSessionID);
-			}
+			} //else {
+			// 	rightSessionID = socket.request.session.id;
+			// 	console.log("rightSessionID: " + rightSessionID);
+			// }
 		}
 	});
 
@@ -87,15 +87,16 @@ io.on("connection", (socket) => {
 		console.log("disconnected");
 	});
 
-	socket.on("playerMoved", (posY) => {
+	socket.on("playerMoved", (posY, side) => {
 		let room = getSocketRoom(socket);
 		//emits to all other sockets in the room(not the sender)
-		if (socket.request.session.id == rightSessionID) {
+		if (side === "right") {
+			console.log("update rightPlayer");
 			socket.to(room).emit("updateRightPlayer", posY);
-		} else if (socket.request.session.id == leftSessionID) {
+		} else if (side === "left") {
 			socket.to(room).emit("updateLeftPlayer", posY);
 		} else {
-			console.log("ERROROROR");
+			console.log("ERROR: Incompatable network information side");
 		}
 	});
 

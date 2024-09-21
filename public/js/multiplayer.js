@@ -48,10 +48,12 @@ function startGame(side, socket) {
 	console.log("game started");
 	let canvas = document.getElementById("myCanvas");
 	let ctx = canvas.getContext("2d");
+
 	let lNetwork = {
 		isMultiplayer: true,
 		socketID: side == "left" ? socket : null,
 		sessionID: socket.io.engine.id, // session id from client side
+		side: "left",
 	};
 	lPlayer = new Player(
 		CONSTANTS.LPLAYER_STARTX,
@@ -61,10 +63,12 @@ function startGame(side, socket) {
 		"ArrowDown",
 		lNetwork
 	);
+
 	let rNetwork = {
 		isMultiplayer: true,
 		socketID: side == "right" ? socket : null,
 		sessionID: socket.io.engine.id, // session id from client side
+		side: "right",
 	};
 	rPlayer = new Player(
 		CONSTANTS.RPLAYER_STARTX,

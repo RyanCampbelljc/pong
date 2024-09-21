@@ -6,14 +6,16 @@ export class Player{
     private m_down: boolean = false;
     private m_score: number = 0;
     private m_socket: any;//socket is just null if the game is in singleplayer mode.
+    private m_netInfo: NetworkInformation | null;
     //made or null so singleplayer does have to pass NetworkInformation object
     constructor(posX: number, posY: number, canvas: HTMLCanvasElement, upButton: string, downButton: string, netinfo: NetworkInformation | null){
         this.m_paddle = new Paddle(posX, posY, canvas);
+        this.m_netInfo = netinfo;
         this.m_socket = netinfo ? netinfo.socketID : null;
         //if null then its singleplayer. Setupinput
         //else its mp but need to make sure there is a socket.(signifies that this client represents this paddle)
         //todo this is ugly
-        if(netinfo == null || netinfo.socketID){
+        if(netinfo == null || this.m_socket){
             document.addEventListener("keydown", (event: KeyboardEvent) => {
                 if(event.code === upButton)
                     this.m_up = true;
@@ -35,7 +37,8 @@ export class Player{
         if(this.m_up != this.m_down){
             this.m_paddle.movePaddle(dt, this.m_up == true ? 1: -1)
             if(this.m_socket){
-                this.m_socket.emit("playerMoved", this.m_paddle.getPositionY());
+                //if socket exists then netInfo must also
+                this.m_socket.emit("playerMoved", this.m_paddle.getPositionY(), this.m_netInfo!.side);
             }
         }
     }

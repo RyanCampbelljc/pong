@@ -5,10 +5,12 @@ export class Player {
     m_down = false;
     m_score = 0;
     m_socket;
+    m_netInfo;
     constructor(posX, posY, canvas, upButton, downButton, netinfo) {
         this.m_paddle = new Paddle(posX, posY, canvas);
+        this.m_netInfo = netinfo;
         this.m_socket = netinfo ? netinfo.socketID : null;
-        if (netinfo == null || netinfo.socketID) {
+        if (netinfo == null || this.m_socket) {
             document.addEventListener("keydown", (event) => {
                 if (event.code === upButton)
                     this.m_up = true;
@@ -27,7 +29,7 @@ export class Player {
         if (this.m_up != this.m_down) {
             this.m_paddle.movePaddle(dt, this.m_up == true ? 1 : -1);
             if (this.m_socket) {
-                this.m_socket.emit("playerMoved", this.m_paddle.getPositionY());
+                this.m_socket.emit("playerMoved", this.m_paddle.getPositionY(), this.m_netInfo.side);
             }
         }
     }

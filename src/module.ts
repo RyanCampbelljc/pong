@@ -18,10 +18,12 @@ export class NetworkInformation {
     isMultiplayer: boolean;
     socketID: any
     sessionID: any
-    constructor(isMultiplayer: boolean, socket: any, session: any) {
+    side: string
+    constructor(isMultiplayer: boolean, socket: any, session: any, side: string) {
         this.isMultiplayer = isMultiplayer;
         this.socketID = socket;
         this.sessionID = session
+        this.side = side;
     }
 }
 
