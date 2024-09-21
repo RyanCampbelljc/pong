@@ -14,4 +14,14 @@ const WIN_AUDIO: string = "assets/win.mp3";
 export const AUDIO_FILES = {BOUNCE_AUDIO, SCORE_AUDIO, WIN_AUDIO};
 const CONSTANTS = {LPLAYER_STARTX, LPLAYER_STARTY, RPLAYER_STARTX, RPLAYER_STARTY};
 export default CONSTANTS;
+export class NetworkInformation {
+    isMultiplayer: boolean;
+    socketID: any
+    sessionID: any
+    constructor(isMultiplayer: boolean, socket: any, session: any) {
+        this.isMultiplayer = isMultiplayer;
+        this.socketID = socket;
+        this.sessionID = session
+    }
+}
 

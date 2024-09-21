@@ -1,6 +1,7 @@
 import { Game } from "/out/module.js";
 import { Player } from "/out/module.js";
 import CONSTANTS from "/out/module.js";
+import { NetworkInformation } from "/out/module.js";
 window.addEventListener("DOMContentLoaded", setup);
 let lPlayer;
 let rPlayer;
@@ -15,14 +16,16 @@ socket.on("connect", () => {
 		console.error("ERROR: No game code in local storage found");
 		//todo should I redirect to home page here?
 	}
-	socket.on("startGame", () => {
-		startGame();
+	socket.on("startGame", (side) => {
+		startGame(side, socket);
 		game.play();
 	});
 	//todo make this typed.
 	socket.on("updateRightPlayer", (posY) => {
-		console.log("updated player position");
 		rPlayer.setPosY(posY);
+	});
+	socket.on("updateLeftPlayer", (posY) => {
+		lPlayer.setPosY(posY);
 	});
 	socket.on("resetItems", () => {
 		game.resetItemPositions();
@@ -41,24 +44,35 @@ function setup() {
 	}
 }
 
-function startGame() {
+function startGame(side, socket) {
+	console.log("game started");
 	let canvas = document.getElementById("myCanvas");
 	let ctx = canvas.getContext("2d");
+	let lNetwork = {
+		isMultiplayer: true,
+		socketID: side == "left" ? socket : null,
+		sessionID: socket.io.engine.id, // session id from client side
+	};
 	lPlayer = new Player(
 		CONSTANTS.LPLAYER_STARTX,
 		CONSTANTS.LPLAYER_STARTY,
 		canvas,
-		"KeyW",
-		"KeyS",
-		socket
+		"ArrowUp",
+		"ArrowDown",
+		lNetwork
 	);
+	let rNetwork = {
+		isMultiplayer: true,
+		socketID: side == "right" ? socket : null,
+		sessionID: socket.io.engine.id, // session id from client side
+	};
 	rPlayer = new Player(
 		CONSTANTS.RPLAYER_STARTX,
-		CONSTANTS.LPLAYER_STARTY,
+		CONSTANTS.RPLAYER_STARTY,
 		canvas,
 		"ArrowUp",
 		"ArrowDown",
-		socket
+		rNetwork
 	);
-	game = new Game(canvas, ctx, lPlayer, rPlayer);
+	game = new Game(canvas, ctx, lPlayer, rPlayer, socket);
 }

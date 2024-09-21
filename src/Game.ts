@@ -72,9 +72,9 @@ export class Game{
         this.m_ball.reset();
         // this.m_ball.setRandomDirection();
         this.drawElements();
-        if(this.m_socket){
-            this.m_socket.emit("resetItems");
-        }
+        // if(this.m_socket){
+        //     this.m_socket.emit("resetItems");
+        // }
     }
 
     private sleep(ms: number) {

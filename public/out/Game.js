@@ -57,11 +57,7 @@ export class Game {
         this.m_lPlayer.getPaddle().setPosition(CONSTANTS.LPLAYER_STARTX, CONSTANTS.LPLAYER_STARTY);
         this.m_rPlayer.getPaddle().setPosition(CONSTANTS.RPLAYER_STARTX, CONSTANTS.RPLAYER_STARTY);
         this.m_ball.reset();
-        this.m_ball.setRandomDirection();
         this.drawElements();
-        if (this.m_socket) {
-            this.m_socket.emit("resetItems");
-        }
     }
     sleep(ms) {
         return new Promise((resolve) => setTimeout(resolve, ms));

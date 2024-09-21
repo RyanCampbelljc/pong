@@ -7,7 +7,6 @@ export class Ball extends GameObject{
     private m_velocityX: number = Ball.S_START_VEL;
     private m_velocityY: number = 0;
     private m_bounceCount = 0;
-
     constructor(x:number, y: number, canvas: HTMLCanvasElement){
         super(x, y, canvas);
     }

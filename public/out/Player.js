@@ -5,21 +5,23 @@ export class Player {
     m_down = false;
     m_score = 0;
     m_socket;
-    constructor(posX, posY, canvas, upButton, downButton, socket = null) {
+    constructor(posX, posY, canvas, upButton, downButton, netinfo) {
         this.m_paddle = new Paddle(posX, posY, canvas);
-        this.m_socket = socket;
-        document.addEventListener("keydown", (event) => {
-            if (event.code === upButton)
-                this.m_up = true;
-            if (event.code === downButton)
-                this.m_down = true;
-        });
-        document.addEventListener("keyup", (event) => {
-            if (event.code === upButton)
-                this.m_up = false;
-            if (event.code === downButton)
-                this.m_down = false;
-        });
+        this.m_socket = netinfo ? netinfo.socketID : null;
+        if (netinfo == null || netinfo.socketID) {
+            document.addEventListener("keydown", (event) => {
+                if (event.code === upButton)
+                    this.m_up = true;
+                if (event.code === downButton)
+                    this.m_down = true;
+            });
+            document.addEventListener("keyup", (event) => {
+                if (event.code === upButton)
+                    this.m_up = false;
+                if (event.code === downButton)
+                    this.m_down = false;
+            });
+        }
     }
     update(dt) {
         if (this.m_up != this.m_down) {

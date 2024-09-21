@@ -1,25 +1,33 @@
 import { Paddle } from "./module.js";
+import { NetworkInformation } from "./module.js";
 export class Player{
     private m_paddle: Paddle;
     private m_up: boolean = false;
     private m_down: boolean = false;
     private m_score: number = 0;
     private m_socket: any;//socket is just null if the game is in singleplayer mode.
-    constructor(posX: number, posY: number, canvas: HTMLCanvasElement, upButton: string, downButton: string, socket: any = null){
+    //made or null so singleplayer does have to pass NetworkInformation object
+    constructor(posX: number, posY: number, canvas: HTMLCanvasElement, upButton: string, downButton: string, netinfo: NetworkInformation | null){
         this.m_paddle = new Paddle(posX, posY, canvas);
-        this.m_socket = socket;
-        document.addEventListener("keydown", (event: KeyboardEvent) => {
-            if(event.code === upButton)
-                this.m_up = true;
-            if(event.code === downButton)
-                this.m_down = true;
-        })
-        document.addEventListener("keyup", (event: KeyboardEvent) => {
-            if(event.code === upButton)
-                this.m_up = false;
-            if(event.code === downButton)
-                this.m_down = false;
-        })
+        this.m_socket = netinfo ? netinfo.socketID : null;
+        //if null then its singleplayer. Setupinput
+        //else its mp but need to make sure there is a socket.(signifies that this client represents this paddle)
+        //todo this is ugly
+        if(netinfo == null || netinfo.socketID){
+            document.addEventListener("keydown", (event: KeyboardEvent) => {
+                if(event.code === upButton)
+                    this.m_up = true;
+                if(event.code === downButton)
+                    this.m_down = true;
+            })
+            document.addEventListener("keyup", (event: KeyboardEvent) => {
+                if(event.code === upButton)
+                    this.m_up = false;
+                if(event.code === downButton)
+                    this.m_down = false;
+            })
+        }
+        
     }
 
     public update(dt:number): void{
@@ -53,8 +61,8 @@ export class Player{
 
     public setPosY(posY: number){
         this.m_paddle.setPositionY(posY);
-        if(this.m_socket){
-            this.m_socket.emit("playerMoved", this.m_paddle.getPositionY());
-        }
+        // if(this.m_socket){
+        //     this.m_socket.emit("playerMoved", this.m_paddle.getPositionY());
+        // }
     }
 }

@@ -14,7 +14,7 @@ function setup() {
 	);
 	let rPlayer2 = new Player(
 		CONSTANTS.RPLAYER_STARTX,
-		CONSTANTS.LPLAYER_STARTY,
+		CONSTANTS.RPLAYER_STARTY,
 		canvas,
 		"ArrowUp",
 		"ArrowDown"

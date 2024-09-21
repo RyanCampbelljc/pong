@@ -8,7 +8,8 @@ import path from "path";
 const app = express();
 const server = createServer(app);
 const io = new Server(server);
-
+let rightSessionID;
+let leftSessionID;
 const sessionMiddleware = session({
 	secret: "mySecretKey",
 	resave: false,
@@ -40,14 +41,12 @@ io.use((socket, next) => {
 io.on("connection", (socket) => {
 	let socketID = socket.id.substring(0, 4);
 	const session = socket.request.session;
-	const sessionID = session.id.substring(0, 4); //todo why id and not userId
+	const sessionID = session.id.substring(0, 4);
 	console.log(
 		`socket id: ${socketID}; session id ${sessionID}; joined server`
 	);
 
 	socket.on("joinRoom", (roomCode) => {
-		// let exists = doesRoomExist(roomCode);
-		// console.log("room exists: " + exists);
 		if (roomCode === undefined) {
 			console.log("error roomCode is null");
 		}
@@ -61,9 +60,16 @@ io.on("connection", (socket) => {
 					roomSize + 1
 				}`
 			);
+
 			if (roomSize + 1 == 2) {
 				// game is ready to start
-				io.to(roomCode).emit("startGame"); // to all sockets in the room
+				socket.to(roomCode).emit("startGame", "right"); //emit to the other player that they are right
+				leftSessionID = socket.request.session.id;
+				console.log("leftSessionID: " + leftSessionID);
+				socket.emit("startGame", "left"); //emit to self left
+			} else {
+				rightSessionID = socket.request.session.id;
+				console.log("rightSessionID: " + rightSessionID);
 			}
 		}
 	});
@@ -84,11 +90,17 @@ io.on("connection", (socket) => {
 	socket.on("playerMoved", (posY) => {
 		let room = getSocketRoom(socket);
 		//emits to all other sockets in the room(not the sender)
-		socket.to(room).emit("updateRightPlayer", posY);
+		if (socket.request.session.id == rightSessionID) {
+			socket.to(room).emit("updateRightPlayer", posY);
+		} else if (socket.request.session.id == leftSessionID) {
+			socket.to(room).emit("updateLeftPlayer", posY);
+		} else {
+			console.log("ERROROROR");
+		}
 	});
 
 	socket.on("resetItems", () => {
-		let room = getSocketRoom(room);
+		let room = getSocketRoom(socket);
 		console.log("emitted");
 		socket.to(room).emit("resetItems");
 	});
