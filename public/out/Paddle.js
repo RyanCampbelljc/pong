@@ -2,12 +2,10 @@ import { GameObject } from "./module.js";
 export class Paddle extends GameObject {
     static S_WIDTH = 10;
     static S_HEIGHT = 50;
-    static S_COLOR = "red";
+    static S_COLOR = "white";
     m_velocity = 400;
     constructor(x, y, canvas) {
         super(x, y, canvas);
-    }
-    update(dt) {
     }
     movePaddle(dt, dirY) {
         let movement = this.m_velocity * dt;
@@ -20,6 +18,8 @@ export class Paddle extends GameObject {
     }
     draw(ctx) {
         ctx.fillStyle = Paddle.S_COLOR;
+        ctx.shadowColor = 'rgba(255, 0, 0, 1)';
+        ctx.shadowBlur = 50;
         ctx.fillRect(this.m_posX, this.m_posY, Paddle.S_WIDTH, Paddle.S_HEIGHT);
     }
     getPositionX() {

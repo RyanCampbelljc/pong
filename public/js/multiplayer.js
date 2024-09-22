@@ -20,7 +20,7 @@ socket.on("connect", () => {
 		startGame(side, socket);
 		game.play();
 	});
-	//todo make this typed.
+
 	socket.on("updateRightPlayer", (posY) => {
 		rPlayer.setPosY(posY);
 	});
@@ -39,7 +39,6 @@ socket.on("connect", () => {
 	});
 });
 
-//todo should get reference to context and create players to pass to game.
 //this way the game class does need to change when multiplayer becomes a thing
 function setup() {
 	const gameCode = localStorage.getItem("gameCode");

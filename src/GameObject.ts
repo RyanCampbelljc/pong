@@ -8,6 +8,5 @@ export abstract class GameObject {
         this.m_canvas = canvas;
     }
     
-    abstract update(dt: number): void;
     abstract draw(ctx: CanvasRenderingContext2D): void;
 }

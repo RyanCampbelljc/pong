@@ -5,7 +5,7 @@ export class CollisionDetector{
         const rad = ball.getRadius();
         const ballLeft = ball.getPositionX() - rad
         const ballRight = ball.getPositionX() + rad
-        const ballTop = ball.getPositionY() - rad//todo these could be backwards
+        const ballTop = ball.getPositionY() - rad
         const ballBottom = ball.getPositionY() + rad
         
         const padLeft = paddle.getPositionX();

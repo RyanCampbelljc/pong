@@ -2,7 +2,7 @@ import { GameObject } from "./module.js";
 export class Paddle extends GameObject{
     private static readonly S_WIDTH: number = 10;
     private static readonly S_HEIGHT: number = 50;
-    private static readonly S_COLOR: string = "red";
+    private static readonly S_COLOR: string = "white";
     private m_velocity: number = 400;
 
     constructor(x:number, y: number, canvas: HTMLCanvasElement){
@@ -10,9 +10,6 @@ export class Paddle extends GameObject{
 
     }
 
-    public update(dt: number){
-        //todo needed?
-    }
     public movePaddle(dt:number, dirY:number){
         let movement = this.m_velocity * dt;
         if(dirY > 0){ // upwords
@@ -26,6 +23,8 @@ export class Paddle extends GameObject{
 
     public draw(ctx: CanvasRenderingContext2D): void {
         ctx.fillStyle = Paddle.S_COLOR;
+        ctx.shadowColor = 'rgba(255, 0, 0, 1)'; // Glow color
+        ctx.shadowBlur = 50;  // Amount of blur for the glow
         ctx.fillRect(this.m_posX, this.m_posY, Paddle.S_WIDTH, Paddle.S_HEIGHT); //x,y,width,height
     }
 
