@@ -14,18 +14,22 @@
 			<h1>PONG</h1>
 		</div>
 		<div id="content">
-			<p>Singleplayer:</p>
-			<a href="singlePlayer.html">
-				<button type="button">Play</button>
-			</a>
-
-			<p>Multiplayer:</p>
-			<button type="button" id="createLobby">Create Lobby</button>
-
-			<form id="form" action="">
-				<input id="lobbyInput" autocomplete="off" />
-				<button>Join Lobby</button>
-			</form>
+			<div id="content-singleplayer">
+				<h1>Singleplayer:</h1>
+				<a href="singlePlayer.html">
+					<button type="button">Play</button>
+				</a>
+			</div>
+			<div div="content-multiplayer">
+				<div id="content-multiplayer-top">
+					<h1>Multiplayer:</h1>
+					<button type="button" id="createLobby">Create Lobby</button>
+				</div>
+				<form id="form" action="">
+					<input id="lobbyInput" autocomplete="off" />
+					<button>Join Lobby</button>
+				</form>
+			</div>
 		</div>
 	</body>
 </html>
