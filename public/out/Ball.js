@@ -16,6 +16,11 @@ export class Ball extends GameObject {
     draw(ctx) {
         ctx.beginPath();
         ctx.fillStyle = Ball.S_COLOR;
+        ctx.filter = "blur(10px)";
+        ctx.arc(this.m_posX, this.m_posY, this.m_radius, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.fillStyle = Ball.S_COLOR;
+        ctx.filter = "none";
         ctx.arc(this.m_posX, this.m_posY, this.m_radius, 0, 2 * Math.PI);
         ctx.fill();
     }

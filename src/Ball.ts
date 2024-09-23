@@ -18,7 +18,14 @@ export class Ball extends GameObject{
 
     public draw(ctx: CanvasRenderingContext2D): void{
         ctx.beginPath();
+        //glow
         ctx.fillStyle = Ball.S_COLOR;
+        ctx.filter = "blur(10px)"
+        ctx.arc(this.m_posX, this.m_posY, this.m_radius, 0, 2 * Math.PI); //x,y,r, The starting angle, in radians (0 is at the 3 o'clock position of the arc's circle),The ending angle, in radians
+        ctx.fill();
+        //ball
+        ctx.fillStyle = Ball.S_COLOR;
+        ctx.filter = "none"
         ctx.arc(this.m_posX, this.m_posY, this.m_radius, 0, 2 * Math.PI); //x,y,r, The starting angle, in radians (0 is at the 3 o'clock position of the arc's circle),The ending angle, in radians
         ctx.fill();
     }

@@ -22,6 +22,30 @@ body{
     display: flex;
     flex-direction: column;
     align-items: center;
+    color: white;
+}
+
+#game-code-div{
+    display: flex;
+}
+#gamecode{
+    padding-left: 8px;
+}
+
+#playButton{
+    font-family: Impact;
+    font-size: 30px;
+    border-radius: 5px;
+    border-style: none;
+}
+#playButton:disabled{
+    background-color: gray;
+    color: rgb(56, 52, 52);
+    border-radius: 5px;
+}
+#playButton:enabled:hover{
+    background-color: rgb(163, 161, 161);
+    cursor: pointer;
 }
 /* find a button here */
 /* https://getcssscan.com/css-buttons-examples */

@@ -17,9 +17,11 @@ export class Paddle extends GameObject {
         }
     }
     draw(ctx) {
+        ctx.fillStyle = "rgba(255, 0, 0, 1)";
+        ctx.filter = "blur(10px)";
+        ctx.fillRect(this.m_posX - 3, this.m_posY - 3, Paddle.S_WIDTH + 6, Paddle.S_HEIGHT + 6);
         ctx.fillStyle = Paddle.S_COLOR;
-        ctx.shadowColor = 'rgba(255, 0, 0, 1)';
-        ctx.shadowBlur = 50;
+        ctx.filter = "none";
         ctx.fillRect(this.m_posX, this.m_posY, Paddle.S_WIDTH, Paddle.S_HEIGHT);
     }
     getPositionX() {

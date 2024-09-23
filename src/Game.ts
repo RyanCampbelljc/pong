@@ -110,14 +110,29 @@ export class Game{
     }
 
     private drawDashedLine(){
-        this.m_ctx.strokeStyle = "#ffffff";
+        //glow
+        this.m_ctx.strokeStyle = "#1435f0";
+        this.m_ctx.filter = "blur(5px)"
         this.m_ctx.beginPath();
-        this.m_ctx.setLineDash([20, 10]);
+        this.m_ctx.setLineDash([56, 18]);
         this.m_ctx.moveTo(this.m_canvas.width / 2, 0);
         this.m_ctx.lineTo(this.m_canvas.width / 2, this.m_canvas.height);
-        this.m_ctx.lineWidth = 5;
+        this.m_ctx.lineWidth = 13;
         this.m_ctx.stroke();
         this.m_ctx.closePath();
+
+        //line
+        this.m_ctx.imageSmoothingEnabled = false;
+        this.m_ctx.strokeStyle = "#9fecff";
+        this.m_ctx.filter = "none"
+        this.m_ctx.beginPath();
+        this.m_ctx.setLineDash([50, 25]);
+        this.m_ctx.moveTo(this.m_canvas.width / 2, 0);
+        this.m_ctx.lineTo(this.m_canvas.width / 2, this.m_canvas.height);
+        this.m_ctx.lineWidth = 3;
+        this.m_ctx.stroke();
+        this.m_ctx.closePath();
+
     }
 
     private drawElements(): void{
@@ -184,6 +199,7 @@ export class Game{
     private displayScore(player: Player){
         this.m_ctx.font = "40px Impact";
         this.m_ctx.textAlign = "center";
+        this.m_ctx.fillStyle = "red";
         let offset: number = 0;
         if (player == this.m_lPlayer) {
             offset = -50;
