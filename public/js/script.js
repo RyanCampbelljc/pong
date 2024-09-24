@@ -5,14 +5,13 @@ const input = document.getElementById("input");
 const messages = document.getElementById("messages");
 
 socket.on("loadPage", (pageData) => {
-	localStorage.setItem("gameCode", pageData.gameCode);
-	window.location.href = pageData.page;
+	if (pageData.gameCode == null) {
+		window.alert(pageData.error);
+	} else {
+		localStorage.setItem("gameCode", pageData.gameCode);
+		window.location.href = pageData.page;
+	}
 });
-
-// socket.on("roomCode", (code) => {
-// 	localStorage.setItem("gameCode", code);
-// 	socket.emit("joinRoom", code);
-// });
 
 function setup() {
 	let createLobby = document.getElementById("createLobby");

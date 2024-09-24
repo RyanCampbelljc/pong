@@ -135,9 +135,17 @@ function doesRoomExist(code) {
 }
 
 function loadMulitplayer(socket, code) {
+	const roomSize = io.sockets.adapter.rooms.get(code)?.size || 0;
+	let gc = code;
+	let err = "";
+	if (roomSize == 2) {
+		gc = null;
+		err = "Lobby is full";
+	}
 	const pageData = {
 		page: "multiPlayer.html",
-		gameCode: code,
+		gameCode: gc,
+		error: err,
 	};
 	socket.emit("loadPage", pageData);
 }
