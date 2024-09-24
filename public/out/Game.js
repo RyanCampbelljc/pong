@@ -154,7 +154,7 @@ export class Game {
         }
     }
     displayScore(player) {
-        this.m_ctx.font = "40px Impact";
+        this.m_ctx.font = "40px Orbitron";
         this.m_ctx.textAlign = "center";
         this.m_ctx.fillStyle = "red";
         let offset = 0;
@@ -167,7 +167,7 @@ export class Game {
         this.m_ctx.fillText(String(player.getScore()), this.m_canvas.width / 2 + offset, this.m_canvas.height / 8);
     }
     printWinner() {
-        this.m_ctx.font = "100px Impact";
+        this.m_ctx.font = "100px Orbitron";
         let time = window.performance.now() / 500;
         let r = (Math.cos(time * Math.PI + Math.PI) + 1) / 2;
         let g = (Math.cos(time * Math.PI + Math.PI / 2) + 1) / 2;
