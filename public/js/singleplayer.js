@@ -20,4 +20,5 @@ function setup() {
 		"ArrowDown"
 	);
 	let g = new Game(canvas, ctx, lPlayer, rPlayer2);
+	document.getElementById("instructions").classList.add("hidden");
 }

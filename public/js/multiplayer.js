@@ -48,6 +48,7 @@ function setup() {
 	} else {
 		console.error("No gameCode found in localStorage");
 	}
+	document.getElementById("instructions").classList.add("hidden");
 }
 
 function startGame(side, socket) {

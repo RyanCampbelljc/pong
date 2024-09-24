@@ -48,5 +48,12 @@ body{
     background-color: rgb(163, 161, 161);
     cursor: pointer;
 }
+
+#instructions{
+    transition: opacity 6s ease;
+}
+.hidden{
+    opacity: 0;
+}
 /* find a button here */
 /* https://getcssscan.com/css-buttons-examples */
