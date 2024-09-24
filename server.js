@@ -79,6 +79,13 @@ io.on("connection", (socket) => {
 	socket.on("loadMP", (roomCode) => {
 		if (roomCode === undefined) {
 			roomCode = randomCode();
+		} else if (!doesRoomExist(roomCode)) {
+			// room doesnt already exit
+			socket.emit(
+				"error",
+				"Lobby code your trying to join does not exist"
+			);
+			return;
 		}
 		loadMulitplayer(socket, roomCode);
 	});
@@ -136,16 +143,13 @@ function doesRoomExist(code) {
 
 function loadMulitplayer(socket, code) {
 	const roomSize = io.sockets.adapter.rooms.get(code)?.size || 0;
-	let gc = code;
-	let err = "";
 	if (roomSize == 2) {
-		gc = null;
-		err = "Lobby is full";
+		socket.emit("error", "Lobby is full");
+		return;
 	}
 	const pageData = {
 		page: "multiPlayer.html",
-		gameCode: gc,
-		error: err,
+		gameCode: code,
 	};
 	socket.emit("loadPage", pageData);
 }

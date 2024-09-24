@@ -5,12 +5,12 @@ const input = document.getElementById("input");
 const messages = document.getElementById("messages");
 
 socket.on("loadPage", (pageData) => {
-	if (pageData.gameCode == null) {
-		window.alert(pageData.error);
-	} else {
-		localStorage.setItem("gameCode", pageData.gameCode);
-		window.location.href = pageData.page;
-	}
+	localStorage.setItem("gameCode", pageData.gameCode);
+	window.location.href = pageData.page;
+});
+
+socket.on("error", (msg) => {
+	window.alert(msg);
 });
 
 function setup() {
